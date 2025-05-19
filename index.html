@@ -13,7 +13,7 @@
             <input id="input" type="text" class="bg-white p-2" style="border-radius: 5px; width: 60%;">
             <button id="input-btn" class="text-white bg-blue-500 p-2" style="border-radius: 5px;">Search</button>
         </div>
-        <div id="movies-container" class="grid grid-cols-1 lg:grid-cols-3 max-w-screen pt-10 lg:px-20 px-3 gap-10">
+        <div id="movies-container" class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 max-w-screen pt-10 lg:px-20 px-3 gap-10">
         </div>
         <div class="btns">
             <a href=""><button id="back">Previous</button></a>
@@ -52,8 +52,9 @@
                     if (nameMovie === data[i].original_title.toLowerCase()) {
                         movieContainer.innerHTML = ''
                         const card = document.createElement('div');
-                        card.className = 'p-4 border-radius-1 text-white bg-gray-800 w-30%';
+                        card.className = 'p-4 border-radius-1 text-white bg-gray-800';
                         card.style.borderRadius = '10px'
+                        card.style.width = 'lg:30%'
                         card.innerHTML = `
                 <img src="${data[i].poster_path}" alt="" style='border-radius: 15px;'>
                 <h2 class='text-3xl pt-5'>${data[i].original_title}</h2>
