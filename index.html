@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Demmo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-black">
+    <h1 class="flex justify-center max-w-screen text-4xl font-bold text-white pt-5">Movie Explorer</h1>
+        <div class="flex flex-row justify-center items-center gap-5 mt-3">
+            <input id="input" type="text" class="bg-white p-2" style="border-radius: 5px; width: 60%;">
+            <button id="input-btn" class="text-white bg-blue-500 p-2" style="border-radius: 5px;">Search</button>
+        </div>
+        <div id="movies-container" class="grid grid-cols-1 lg:grid-cols-3 max-w-screen pt-10 lg:px-20 px-3 gap-10">
+        </div>
+        <div class="btns">
+            <a href=""><button id="back">Previous</button></a>
+            <a href=""><button id="next">Next</button></a>
+        </div>
+    <script>
+        const input = document.getElementById('input');
+        const inputBtn = document.getElementById('input-btn');
+        const movieContainer = document.getElementById('movies-container');
+        const url = 'https://jsonfakery.com/movies/paginated?limit=10&page=';
+
+        async function api() {
+            const responce = await fetch(url);
+            const readable = await responce.json();
+            const data = readable.data;
+            console.log(data)
+            movieContainer.innerHTML = ''
+
+            data.forEach(element => {
+                const card = document.createElement('div');
+                card.className = 'p-4 border-radius-1 text-white bg-gray-800';
+                card.style.borderRadius = '10px'
+                card.innerHTML += `
+                <img src="${element.poster_path}" alt="" style='border-radius: 15px;'>
+                <h2 class='text-3xl pt-5'>${element.original_title}</h2>
+                <p class='pt-5 text-gray-400'>${element.overview}</p>
+                <p class='pt-5 text-gray-400'><strong>Release Date</strong>: ${element.release_date}</p>
+                <p class='pt-5 text-gray-400'><strong>Rating</strong>: ${element.vote_average}</p>
+                `
+                movieContainer.appendChild(card);
+            });
+
+            inputBtn.addEventListener("click", async () => {
+                const nameMovie = input.value.toLowerCase();
+                for (let i = 0; i < data.length; i++) {
+                    if (nameMovie === data[i].original_title.toLowerCase()) {
+                        movieContainer.innerHTML = ''
+                        const card = document.createElement('div');
+                        card.className = 'p-4 border-radius-1 text-white bg-gray-800 w-30%';
+                        card.style.borderRadius = '10px'
+                        card.innerHTML = `
+                <img src="${data[i].poster_path}" alt="" style='border-radius: 15px;'>
+                <h2 class='text-3xl pt-5'>${data[i].original_title}</h2>
+                <p class='pt-5 text-gray-400'>${data[i].overview}</p>
+                <p class='pt-5 text-gray-400'>Release Date: ${data[i].release_date}</p>
+                <p class='pt-5 text-gray-400'>Rating: ${data[i].vote_average}</p>
+                `
+                        card.style.display = 'flex'
+                        card.style.flexDirection = 'column'
+                        card.style.justifyContent = 'center'
+                        card.style.alignItems = 'center'
+
+                        movieContainer.appendChild(card)
+                        movieContainer.style.display = 'flex'
+                        movieContainer.style.justifyContent = 'center'
+                        movieContainer.style.alignItems = 'center'
+                    }
+                }
+            })
+        }
+        api()
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</body>
+
+</html>
+
+
+
+<!-- 
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo API</title>
+    <style>
+        #first {
+            input {
+                width: 60%;
+                padding: 5px;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-black">
+    
+    <div class="flex flex-col justify-center items-center gap-5" id="first">
+        <input type="text" class="mt-5" placeholder="Search for movie" id="input-btn">
+        <button class="bg-blue-500 text-white w-40 p-2" id="find-btn">Find</button>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 max-w-screen pt-10 px-20 gap-10" id="my-list"></div>
+    <div class="flex flex-row justify-center items-center gap-5 border-none border-r-4">
+        <button class="p-3 bg-red-600 text-white border-r-2 mt-5">Previous</button>
+        <button class="p-3 bg-red-600 text-white border-r-2 mt-5">Next</button>
+    </div>
+    <script>
+        let inputBtn = document.getElementById('input-btn')
+        let findBtn = document.getElementById('find-btn')
+        let myList = document.getElementById('my-list')
+        const url = 'https://jsonfakery.com/movies/paginated?limit=10&page='
+
+    async function getData() {
+        const promise = await fetch(url)
+        const response = await promise.json()
+        const film = response.data
+
+        console.log(response)
+        inputBtn.innerHTML = ''
+
+        film.forEach(element => {
+            let card = document.createElement('div')
+            card.className = 'p-4 border-radius-1 text-white bg-gray-800'
+            card.style.borderRadius = '10px'
+            card.innerHTML = `
+            <img src='${element.poster_path}' style='border-radius: 15px'>
+            <h1 class='text-3xl pt-5'>${element.original_title}</h1>
+            <p class='pt-5 text-gray-400'>${element.overview}</p>
+            <p class='pt-5 text-gray-400'>Release Date: ${element.release_date}</p>
+            <p class='pt-5 text-gray-400'>Rating: 10 / ${element.vote_average}</p>
+        `;
+            myList.appendChild(card)
+        });
+    }
+    getData()
+    
+    findBtn.addEventListener('click', async() => {
+            const url = 'https://jsonfakery.com/movies/paginated?limit=10&page='
+            const promise = await fetch(url)
+            const response = await promise.json()
+            const film = response.data
+
+            myList.innerHTML = ''
+
+            const searchValue = inputBtn.value.toLowerCase()
+
+            for (let i = 0; i < film.length; i++) {
+                if (film[i].original_title.toLowerCase().includes(searchValue)) {
+                    let card = document.createElement('div')
+                    card.className = 'p-4 border-radius-1 text-white bg-gray-800'
+                    card.style.borderRadius = '10px'
+                    card.innerHTML = `
+                <img src='${film[i].poster_path}' style='border-radius: 15px'>
+                <h1 class='text-3xl pt-5'>${film[i].original_title}</h1>
+                <p class='pt-5 text-gray-400'>${film[i].overview}</p>
+                <p class='pt-5 text-gray-400'>Release Date: ${film[i].release_date}</p>
+                <p class='pt-5 text-gray-400'>Rating: ${film[i].vote_average}</p>
+            `;
+                    myList.appendChild(card)
+                }
+            }
+        })
+
+    </script>
+</body>
+</html> -->
